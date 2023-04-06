@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameStructs.h"
+#include <vector>
 #include "Cannon.generated.h"
 
 UCLASS()
@@ -30,14 +31,28 @@ protected:
 		float FireDamage = 1.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon params")
 		ECannonType Type = ECannonType::Projectile;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon params")
+		uint8 Ammo = 10;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon params")
+		ECannonFireMode Mode = ECannonFireMode::Single;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon params")
+		uint8 BurstFireShots = 3;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon params")
+		float BurstFireShotsInterval = 1;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon params")
+		float BurstFireRate = 0.5f;
 
 	FTimerHandle ReloadTimerHandle;
-	bool ReadyToFire = false;
+	std::vector<FTimerHandle> BurstTimerHandle;
+	bool bReadyToFire = false;
 
 public:
 	ACannon();
 
 	void Fire();
 	void FireSpecial();
+	void FireSingle();
+	void FireBurst();
+	void SwitchFireMode();
 	bool IsReadyToFire();
 };

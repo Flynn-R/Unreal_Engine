@@ -75,4 +75,6 @@ public:
 		void Fire();
 	UFUNCTION()
 		void FireSpecial();
+	UFUNCTION()
+		void SwitchFireMode();
 };

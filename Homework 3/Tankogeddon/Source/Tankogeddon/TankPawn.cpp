@@ -117,3 +117,9 @@ void ATankPawn::FireSpecial()
 	if (Cannon)
 		Cannon->FireSpecial();
 }
+
+void ATankPawn::SwitchFireMode()
+{
+	if (Cannon)
+		Cannon->SwitchFireMode();
+}

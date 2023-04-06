@@ -28,6 +28,7 @@ protected:
 	void RotateRight(float value);
 	void Fire();
 	void FireSpecial();
+	void SwitchFireMode();
 
 public:
 	ATankPlayerController();

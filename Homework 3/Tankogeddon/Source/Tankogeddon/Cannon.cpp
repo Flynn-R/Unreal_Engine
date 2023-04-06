@@ -21,37 +21,73 @@ ACannon::ACannon()
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
 }
 
+void ACannon::FireSingle()
+{
+	if (Type == ECannonType::Projectile)
+		GEngine->AddOnScreenDebugMessage(0, 0.5, FColor::Red, "Fire: projectile");
+	else
+		GEngine->AddOnScreenDebugMessage(0, 0.5, FColor::Yellow, "Fire: trace");
+
+	GEngine->AddOnScreenDebugMessage(1, 1, FColor::White, FString::Printf(TEXT("Ammo left: %d"), Ammo));
+}
+
 void ACannon::Fire()
 {
-	if (!ReadyToFire)
+	if (!bReadyToFire || !(Ammo > 0))
 		return;
+	
+	--Ammo;
+	bReadyToFire = false;
 
-	ReadyToFire = false;
-	if (Type == ECannonType::Projectile)
-		GEngine->AddOnScreenDebugMessage(0, 1, FColor::Red, "Fire: projectile");
+	if (Mode == ECannonFireMode::Single)
+	{
+		FireSingle();
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1 / FireRate, false);
+	}
 	else
-		GEngine->AddOnScreenDebugMessage(0, 1, FColor::Yellow, "Fire: trace");
-
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1 / FireRate, false);
+	{
+		FireBurst();
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, Shots / BurstFireRate, false);
+		BurstTimerHandle.clear();
+	}
 }
 
 void ACannon::FireSpecial()
 {
-	if (!ReadyToFire)
+	if (!bReadyToFire || !(Ammo > 0))
 		return;
 
-	ReadyToFire = false;
+	--Ammo;
+	bReadyToFire = false;
 	if (Type == ECannonType::Projectile)
-		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Cyan, "Fire: armor piercing projectile");
+		GEngine->AddOnScreenDebugMessage(2, 2, FColor::Cyan, "Fire: armor piercing projectile");
 	else
-		GEngine->AddOnScreenDebugMessage(1, 1, FColor::Blue, "Fire: high frequency beam trace");
+		GEngine->AddOnScreenDebugMessage(2, 2, FColor::Blue, "Fire: high frequency beam trace");
 
-	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 2 / FireRate, false);
+	GEngine->AddOnScreenDebugMessage(3, 2, FColor::White, FString::Printf(TEXT("Ammo left: %d"), Ammo));
+	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 3 / FireRate, false);
+}
+
+void ACannon::FireBurst()
+{
+	for (auto i = 0; i < Shots; ++i)
+	{
+		BurstTimerHandle.push_back(FTimerHandle());
+		GetWorld()->GetTimerManager().SetTimer(BurstTimerHandle.back(), this, &ACannon::FireSingle, 1 / FireRate, false, i * ShotsInterval);
+	}
+}
+
+void ACannon::SwitchFireMode()
+{
+	if (Mode == ECannonFireMode::Single)
+		Mode = ECannonFireMode::Burst;
+	else
+		Mode = ECannonFireMode::Single;
 }
 
 bool ACannon::IsReadyToFire()
 {
-	return ReadyToFire;
+	return bReadyToFire;
 }
 
 void ACannon::BeginPlay()
@@ -62,5 +98,5 @@ void ACannon::BeginPlay()
 
 void ACannon::Reload()
 {
-	ReadyToFire = true;
+	bReadyToFire = true;
 }
