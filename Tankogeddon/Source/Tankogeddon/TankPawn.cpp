@@ -31,6 +31,13 @@ ATankPawn::ATankPawn()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
+
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health component"));
+	HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
+	HealthComponent->OnDamaged.AddUObject(this, &ATankPawn::DamageTaken);
+
+	HitCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("Hit collider"));
+	HitCollider->SetupAttachment(BodyMesh);
 }
 
 void ATankPawn::BeginPlay()
@@ -58,6 +65,16 @@ FRotator ATankPawn::TurretRotation()
 	targetRotation.Pitch = currentRotation.Pitch;
 	targetRotation.Roll = currentRotation.Roll;
 	return FRotator(FMath::Lerp(currentRotation, targetRotation, TurretInterpolationKey));
+}
+
+void ATankPawn::Die()
+{
+	Destroy();
+}
+
+void ATankPawn::DamageTaken(float DamageValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Tank %s took damage: %f. Health: %f"), *GetName(), DamageValue, HealthComponent->GetHealth());
 }
 
 void ATankPawn::SetupCannon(TSubclassOf<ACannon> newCannon)
@@ -143,4 +160,9 @@ void ATankPawn::SwitchCannon()
 	SecondaryCannonClass = temp;
 	SetupCannon(EquippedCannonClass);
 	EquippedCannon->SetAmmo(ammo);
+}
+
+void ATankPawn::TakeDamage(FDamageData DamageData)
+{
+	HealthComponent->TakeDamage(DamageData);
 }
