@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "InheritedTankPawn.h"
 #include "TankPlayerController.generated.h"
 
 /**
@@ -17,6 +18,8 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController
 protected:
 	UPROPERTY()
 		class ATankPawn* TankPawn;
+	/*UPROPERTY()
+		AInheritedTankPawn* TankPawn;*/
 	UPROPERTY()
 		FVector mousePos;
 

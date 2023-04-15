@@ -7,6 +7,7 @@
 #include "TimerManager.h"
 #include "Engine/Engine.h"
 #include "Projectile.h"
+#include "DamageTaker.h"
 
 ACannon::ACannon()
 {
@@ -51,7 +52,20 @@ void ACannon::FireSingle()
 			DrawDebugLine(GetWorld(), start, hitResult.Location, FColor::Red, false,
 				0.5f, 0, 5);
 			if (hitResult.GetActor())
-				hitResult.GetActor()->Destroy();
+			{
+				IDamageTaker* DamageTakerActor = Cast<IDamageTaker>(hitResult.GetActor());
+				if (DamageTakerActor)
+				{
+					FDamageData DamageData;
+					DamageData.DamageValue = FireDamage;
+					DamageData.Instigator = this;
+					DamageData.DamageMaker = this;
+
+					DamageTakerActor->TakeDamage(DamageData);
+				}
+				else
+					hitResult.GetActor()->Destroy();
+			}
 		}
 		else
 			DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.5f, 0, 5);

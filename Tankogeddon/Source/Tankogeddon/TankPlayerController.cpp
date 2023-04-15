@@ -26,6 +26,7 @@ void ATankPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	TankPawn = Cast<ATankPawn>(GetPawn());
+	/*TankPawn = Cast<AInheritedTankPawn>(GetPawn());*/
 }
 
 void ATankPlayerController::MoveForward(float value)

@@ -3,21 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
-#include "Cannon.h"
-#include "DamageTaker.h"
-#include "HealthComponent.h"
-#include "Components/BoxComponent.h"
-#include "TankPawn.generated.h"
-
-class UStaticMeshComponent;
-class ACannon;
+#include "AbstractPawn.h"
+#include "InheritedTankPawn.generated.h"
 
 UCLASS()
-class TANKOGEDDON_API ATankPawn : public APawn, public IDamageTaker
+class TANKOGEDDON_API AInheritedTankPawn : public AAbstractPawn
 {
 	GENERATED_BODY()
-
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -31,33 +24,16 @@ protected:
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		UStaticMeshComponent* BodyMesh;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		UStaticMeshComponent* TurretMesh;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UArrowComponent* CannonSetupPoint;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		class USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		class UCameraComponent* Camera;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		UHealthComponent* HealthComponent;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		UBoxComponent* HitCollider;
 
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
-		TSubclassOf<ACannon> EquippedCannonClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
 		TSubclassOf<ACannon> SecondaryCannonClass;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float MoveSpeed = 1000.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float RotationSpeed = 500.0f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-		float TankInterpolationKey = 0.1f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-		float TurretInterpolationKey = 0.5f;
 
 	float _targetForwardAxisValue;
 	float _targetRightAxisValue;
@@ -71,16 +47,14 @@ protected:
 
 	UPROPERTY()
 		class ATankPlayerController* TankController;
-	UPROPERTY()
-		ACannon* EquippedCannon;
 
 public:
-	ATankPawn();
+	AInheritedTankPawn();
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	void SetupCannon(TSubclassOf<ACannon> newCannon);
-	ACannon* GetCannon() { return EquippedCannon; }
+	void SetupCannon(TSubclassOf<ACannon> newCannon) override;
+	ACannon* GetCannon() { return Cannon; }
 
 	UFUNCTION()
 		void MoveForward(float value);
@@ -96,6 +70,4 @@ public:
 		void SwitchFireMode();
 	UFUNCTION()
 		void SwitchCannon();
-	UFUNCTION()
-		void TakeDamage(FDamageData DamageData);
 };
