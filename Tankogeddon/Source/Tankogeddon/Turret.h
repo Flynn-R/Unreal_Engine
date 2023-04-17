@@ -40,6 +40,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret|Cannon")
 		TSubclassOf<ACannon> CannonClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Turret|Cannon")
+		TSubclassOf<ACannon> SecondaryCannonClass;
 
 	UPROPERTY()
 		ACannon* Cannon;
@@ -54,6 +56,8 @@ protected:
 		float TargetingRate = 0.005f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 		float Accuracy = 10.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
+		float CannonSwitchTime = 5.0f;
 
 	const FString BodyMeshPath = "/Script/Engine.StaticMesh'/Game/CSC/Meshes/SM_CSC_Tower1.SM_CSC_Tower1'";
 	const FString TurretMeshPath = "/Script/Engine.StaticMesh'/Game/CSC/Meshes/SM_CSC_Gun1.SM_CSC_Gun1'";
@@ -67,4 +71,5 @@ protected:
 	bool CanFire();
 	void Fire();
 	bool IsPlayerSeen();
+	void SwitchCannon();
 };
