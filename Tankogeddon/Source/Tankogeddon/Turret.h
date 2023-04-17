@@ -66,4 +66,5 @@ protected:
 	bool IsPlayerInRange();
 	bool CanFire();
 	void Fire();
+	bool IsPlayerSeen();
 };
