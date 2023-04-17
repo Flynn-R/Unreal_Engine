@@ -18,6 +18,9 @@ void ATankAIController::BeginPlay()
 		PatrollingPoints.Add(point + pawnLocation);
 	
 	CurrentPatrolPointIndex = 0;
+	
+	FTimerHandle SwitchingCannonTimerHandle;
+	GetWorld()->GetTimerManager.SetTimer(SwitchingCannonTimerHandle, this, &ATankPawn::SwitchCannon, CannonSwitchTime, true, CannonSwitchTime);
 }
 
 void ATankAIController::Tick(float DeltaTime)
