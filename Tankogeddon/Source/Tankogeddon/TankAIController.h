@@ -30,6 +30,8 @@ protected:
 		float TargetingSpeed = 0.1f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
 		float Accuracy = 10.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Targeting")
+		float CannonSwitchTime = 5.0f;
 
 protected:
 	virtual void BeginPlay() override;
