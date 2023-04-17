@@ -9,6 +9,11 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/ArrowComponent.h"
 
+FVector ATankPawn::GetEyesPosition()
+{
+	return CannonSetupPoint->GetComponentLocation();
+}
+
 ATankPawn::ATankPawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -58,13 +63,13 @@ FRotator ATankPawn::TankRotation(float DeltaTime)
 	return FRotator(0, GetActorRotation().Yaw + RotationSpeed * currentRotationAxisValue * DeltaTime, 0);
 }
 
-FRotator ATankPawn::TurretRotation()
+void ATankPawn::TurretRotation(FVector MousePos)
 {
 	FRotator currentRotation = TurretMesh->GetComponentRotation();
-	FRotator targetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TankController->GetMousePos());
+	FRotator targetRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), MousePos);
 	targetRotation.Pitch = currentRotation.Pitch;
 	targetRotation.Roll = currentRotation.Roll;
-	return FRotator(FMath::Lerp(currentRotation, targetRotation, TurretInterpolationKey));
+	TurretMesh->SetWorldRotation(FRotator(FMath::Lerp(currentRotation, targetRotation, TurretInterpolationKey)));
 }
 
 void ATankPawn::Die()
@@ -108,7 +113,7 @@ void ATankPawn::Tick(float DeltaTime)
 	SetActorLocation(TankMovement(DeltaTime), true);
 	SetActorRotation(TankRotation(DeltaTime));
 	if (TankController)
-		TurretMesh->SetWorldRotation(TurretRotation());
+		TurretRotation(TankController->GetMousePos());
 }
 
 void ATankPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

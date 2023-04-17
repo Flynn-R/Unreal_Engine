@@ -21,6 +21,14 @@ ACannon::ACannon()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn point"));
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Shoot effect"));
+	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
+	ShootEffect->SetAutoActivate(false);
+
+	AudioEffect = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio effect"));
+	AudioEffect->SetupAttachment(ProjectileSpawnPoint);
+	AudioEffect->SetAutoActivate(false);
 }
 
 void ACannon::FireSingle()
@@ -81,6 +89,23 @@ void ACannon::Fire()
 	
 	--Ammo;
 	bReadyToFire = false;
+
+	ShootEffect->ActivateSystem();
+	AudioEffect->Play();
+
+	if (GetOwner() && GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn())
+	{
+		if (ShootForceEffect)
+		{
+			FForceFeedbackParameters shootForceEffectParams;
+			shootForceEffectParams.bLooping = false;
+			shootForceEffectParams.Tag = "shootForceEffectParams";
+			GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ShootForceEffect, shootForceEffectParams);
+		}
+
+		if (ShootShake)
+			GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(ShootShake);
+	}
 
 	if (Mode == ECannonFireMode::Single)
 	{
