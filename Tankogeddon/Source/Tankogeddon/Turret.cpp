@@ -66,6 +66,8 @@ void ATurret::BeginPlay()
 
 	FTimerHandle TargetingTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TargetingTimerHandle, this, &ATurret::Targeting, TargetingRate, true, TargetingRate);
+	FTimerHandle SwitchingCannonTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(SwitchingCannonTimerHandle, this, &ATurret::SwitchCannon, CannonSwitchTime, true, CannonSwitchTime);
 }
 
 void ATurret::Destroyed()
@@ -136,4 +138,15 @@ bool ATurret::IsPlayerSeen()
 
 	DrawDebugLine(GetWorld(), eyesPos, playerPos, FColor::Cyan, false, 0.5f, 0, 10);
 	return false;
+}
+
+void ATurret::SwitchCannon()
+{
+	auto temp = CannonClass;
+	CannonClass = SecondaryCannonClass;
+	SecondaryCannonClass = temp;
+	Cannon->Destroy();
+	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
+	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	Cannon->SetAmmo(255);
 }
