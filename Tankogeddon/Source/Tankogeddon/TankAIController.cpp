@@ -20,7 +20,7 @@ void ATankAIController::BeginPlay()
 	CurrentPatrolPointIndex = 0;
 	
 	FTimerHandle SwitchingCannonTimerHandle;
-	GetWorld()->GetTimerManager.SetTimer(SwitchingCannonTimerHandle, this, &ATankPawn::SwitchCannon, CannonSwitchTime, true, CannonSwitchTime);
+	GetWorld()->GetTimerManager().SetTimer(SwitchingCannonTimerHandle, this, &ATankAIController::SwitchCannon, CannonSwitchTime, true, CannonSwitchTime);
 }
 
 void ATankAIController::Tick(float DeltaTime)
@@ -120,4 +120,9 @@ bool ATankAIController::IsPlayerSeen()
 
 	DrawDebugLine(GetWorld(), eyesPos, playerPos, FColor::Cyan, false, 0.5f, 0, 10);
 	return false;
+}
+
+void ATankAIController::SwitchCannon()
+{
+	TankPawn->SwitchCannon();
 }

@@ -124,7 +124,7 @@ bool ATurret::IsPlayerSeen()
 	FHitResult hitResult;
 	FCollisionQueryParams traceParams = FCollisionQueryParams(FName(TEXT("FireTrace")), true, this);
 	traceParams.bTraceComplex = true;
-	traceParams.AddIgnoredActor(TankPawn->GetCannon());
+	traceParams.AddIgnoredActor(Cannon);
 	traceParams.bReturnPhysicalMaterial = false;
 
 	if (GetWorld()->LineTraceSingleByChannel(hitResult, eyesPos, playerPos, ECollisionChannel::ECC_Visibility, traceParams))
@@ -146,6 +146,9 @@ void ATurret::SwitchCannon()
 	CannonClass = SecondaryCannonClass;
 	SecondaryCannonClass = temp;
 	Cannon->Destroy();
+
+	FActorSpawnParameters params;
+	params.Owner = this;
 	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	Cannon->SetAmmo(255);
