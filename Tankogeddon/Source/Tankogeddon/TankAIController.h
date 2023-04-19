@@ -45,4 +45,5 @@ protected:
 	void Fire();
 	bool IsPlayerSeen();
 	void SwitchCannon();
+	void Initialize();
 };

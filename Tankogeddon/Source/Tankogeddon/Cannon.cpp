@@ -71,8 +71,8 @@ void ACannon::FireSingle()
 
 					DamageTakerActor->TakeDamage(DamageData);
 				}
-				else
-					hitResult.GetActor()->Destroy();
+				/*else
+					hitResult.GetActor()->Destroy();*/
 			}
 		}
 		else
