@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "GameStructs.h"
 #include <vector>
+#include "Camera/CameraShakeBase.h"
+#include "Components/AudioComponent.h"
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Cannon.generated.h"
 
 UCLASS()
@@ -47,6 +51,15 @@ protected:
 	FTimerHandle ReloadTimerHandle;
 	std::vector<FTimerHandle> BurstTimerHandle;
 	bool bReadyToFire = false;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+		UParticleSystemComponent* ShootEffect;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+		UAudioComponent* AudioEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		UForceFeedbackEffect* ShootForceEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+		TSubclassOf<UCameraShakeBase> ShootShake;
 
 public:
 	ACannon();

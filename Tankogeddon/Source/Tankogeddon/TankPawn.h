@@ -23,7 +23,6 @@ protected:
 
 	FVector TankMovement(float DeltaTime);
 	FRotator TankRotation(float DeltaTime);
-	FRotator TurretRotation();
 	UFUNCTION()
 		void Die();
 	UFUNCTION()
@@ -74,6 +73,14 @@ protected:
 	UPROPERTY()
 		ACannon* EquippedCannon;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", Meta = (MakeEditWidget = true))
+		TArray<FVector> PatrollingPoints;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accuracy")
+		float MovementAccuracy = 50.0f;
+
+public:
+	FVector GetEyesPosition();
+
 public:
 	ATankPawn();
 
@@ -98,4 +105,12 @@ public:
 		void SwitchCannon();
 	UFUNCTION()
 		void TakeDamage(FDamageData DamageData);
+	UFUNCTION()
+		TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; }
+	UFUNCTION()
+		float GetMovementAccuracy() { return MovementAccuracy; }
+	UFUNCTION()
+		FVector GetTurretForwardVector() { return TurretMesh->GetForwardVector(); }
+	UFUNCTION()
+		void TurretRotation(FVector MousePos);
 };
