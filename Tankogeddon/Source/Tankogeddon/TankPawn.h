@@ -74,7 +74,7 @@ protected:
 		ACannon* EquippedCannon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", Meta = (MakeEditWidget = true))
-		TArray<FVector> PatrollingPoints;
+		TArray<class ATargetPoint*> PatrollingPoints;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Move params|Accuracy")
 		float MovementAccuracy = 50.0f;
 
@@ -104,9 +104,11 @@ public:
 	UFUNCTION()
 		void SwitchCannon();
 	UFUNCTION()
-		void TakeDamage(FDamageData DamageData);
+		void TakeDamage(FDamageData DamageData) override;
 	UFUNCTION()
-		TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; }
+		TArray<FVector> GetPatrollingPoints();
+	UFUNCTION()
+		void SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints);
 	UFUNCTION()
 		float GetMovementAccuracy() { return MovementAccuracy; }
 	UFUNCTION()
