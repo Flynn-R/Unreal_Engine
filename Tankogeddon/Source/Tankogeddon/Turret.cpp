@@ -52,18 +52,18 @@ void ATurret::DamageTaken(float DamageValue)
 	UE_LOG(LogTemp, Warning, TEXT("Turret %s took damage: %f. Health: %f"), *GetName(), DamageValue, HealthComponent->GetHealth());
 }
 
-//void ATurret::PostInitializeComponents()
-//{
-//	Super::PostInitializeComponents();
-//
-//	UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
-//	if (turretMeshTemp)
-//		TurretMesh->SetStaticMesh(turretMeshTemp);
-//
-//	UStaticMesh* bodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
-//	if (bodyMeshTemp)
-//		BodyMesh->SetStaticMesh(bodyMeshTemp);
-//}
+void ATurret::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
+	if (turretMeshTemp)
+		TurretMesh->SetStaticMesh(turretMeshTemp);
+
+	UStaticMesh* bodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
+	if (bodyMeshTemp)
+		BodyMesh->SetStaticMesh(bodyMeshTemp);
+}
 
 void ATurret::BeginPlay()
 {

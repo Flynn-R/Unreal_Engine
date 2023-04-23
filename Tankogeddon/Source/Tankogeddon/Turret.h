@@ -26,7 +26,7 @@ public:
 	UFUNCTION()
 		void DamageTaken(float DamageValue);
 
-	/*virtual void PostInitializeComponents() override;*/
+	virtual void PostInitializeComponents() override;
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
