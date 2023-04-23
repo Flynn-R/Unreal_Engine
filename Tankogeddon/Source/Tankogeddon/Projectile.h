@@ -14,17 +14,29 @@ class TANKOGEDDON_API AProjectile : public AActor
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UStaticMeshComponent* Mesh;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UParticleSystemComponent* TrailEffect;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float MoveSpeed = 1200;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 		float MoveRate = 0.005f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+		bool bEnableExplosion = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 		float Damage = 1;
+	UPROPERTY(EDitDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+		float PushForce = 1000.0f;
+
 	FTimerHandle MovementTimerHandle;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+		float ExplodeRadius = 250.0f;
 
 public:
 	AProjectile();
-	void Start();
+	virtual void Start();
 
 protected:
 	UFUNCTION()
@@ -32,5 +44,9 @@ protected:
 			OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool
 			bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
-		void Move();
+		virtual void Move();
+	UFUNCTION()
+		virtual void Explode();
+
+	virtual void SweepResult(TArray<FHitResult> AttackHit);
 };
