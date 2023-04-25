@@ -1,0 +1,6 @@
+Задание 1
+В метод AddImpulse() класса UPrimitiveComponent был заменён на метод AddForce().
+
+Задание 2
+В классе AProjectile были добавлены поля ExplodeRadius и bEnableExplosion и методы Explode() и SweepResult(). Метод Explode() был перенесён из наследованного класса PhysicsProjectile. Проверка на нанесение повреждений или отталкивание объектов была вынесена в отдельный метод класса SweepResult().
+С помощью вызова метода Explode() (если это допускается переменной bEnableExplosion, настраиваемой в блюпринте) в методе OnMeshOverLapBegin() перед вызовом метода Destroy(), снаряд взорвётся.

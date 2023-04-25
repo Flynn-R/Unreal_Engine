@@ -28,13 +28,13 @@ ATurret::ATurret()
 	HealthComponent->OnDie.AddUObject(this, &ATurret::Die);
 	HealthComponent->OnDamaged.AddUObject(this, &ATurret::DamageTaken);
 
-	UStaticMesh* TurretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
+	/*UStaticMesh* TurretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
 	if (TurretMeshTemp)
 		TurretMesh->SetStaticMesh(TurretMeshTemp);
 
 	UStaticMesh* BodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
 	if (BodyMeshTemp)
-		BodyMesh->SetStaticMesh(BodyMeshTemp);
+		BodyMesh->SetStaticMesh(BodyMeshTemp);*/
 }
 
 void ATurret::TakeDamage(FDamageData DamageData)
@@ -50,6 +50,19 @@ void ATurret::Die()
 void ATurret::DamageTaken(float DamageValue)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Turret %s took damage: %f. Health: %f"), *GetName(), DamageValue, HealthComponent->GetHealth());
+}
+
+void ATurret::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	UStaticMesh* turretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
+	if (turretMeshTemp)
+		TurretMesh->SetStaticMesh(turretMeshTemp);
+
+	UStaticMesh* bodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
+	if (bodyMeshTemp)
+		BodyMesh->SetStaticMesh(bodyMeshTemp);
 }
 
 void ATurret::BeginPlay()
